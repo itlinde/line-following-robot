@@ -25,9 +25,6 @@ int P, D, previousError, PIDvalue, error;
 int lsp, rsp;
 int lfspeed = 80; // base motor speed for PWM pins
 
-unsigned long lineLastSeen;
-unsigned long currentTime;
-
 #define AIN1 18 // Assign the motor pins
 #define AIN2 5
 #define ConA 4 
@@ -77,13 +74,9 @@ void robot_control() {
   // when it detects all white
   while(sensorValues[0]<=60 && sensorValues[1]<=60 && sensorValues[2]<=60 && sensorValues[3]<=60 && sensorValues[4]<=60) { 
 
-    currentTime = millis();
-
     // CASE 1: go straight if line was last detected around the middle
     if (previousError < 1000 && previousError > -1000) { // if the line was last detected around the middle,
-      if ((currentTime - lineLastSeen) >= 400) { // AND if its been >500ms since the line was last seen:
-        motor_drive(lfspeed*1.5, lfspeed*1.5); // go straight
-      }
+      motor_drive(lfspeed*1.5, lfspeed*1.5); // go straight
     }
     // CASE 2: Else, turn right or left
     else if (previousError > 1000) { // Turn left if the line was last seen to the left
